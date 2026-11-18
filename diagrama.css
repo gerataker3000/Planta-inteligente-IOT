@@ -76,3 +76,9 @@
   .iot-type { margin-inline-start: 0; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.iot-analysis a { color: var(--telemetry); text-decoration: underline; }
+.mobile-app h3 { margin-top: 0; }
+.mobile-app li + li { margin-top: 6px; }
+.mobile-preview { align-self: start; }
+.mobile-preview img { height: auto; aspect-ratio: auto; }

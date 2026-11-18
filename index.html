@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="diagrama.css">
 </head>
 <body>
-<header class="top"><nav class="nav wrap"><a class="brand" href="#inicio"><span class="brandmark">✿</span><span>INVERNADERO <span style="color:var(--lime)">IoT</span></span></a><div class="links"><a href="#monitoreo">Monitoreo</a><a href="#arquitectura">Arquitectura</a><a href="#graficas-pdf">Gráficas PDF</a><a href="#componentes">Componentes</a><a href="#conexion">ThingSpeak</a></div><span class="tag">ESP32 · Control local</span></nav></header>
+<header class="top"><nav class="nav wrap"><a class="brand" href="#inicio"><span class="brandmark">✿</span><span>INVERNADERO <span style="color:var(--lime)">IoT</span></span></a><div class="links"><a href="#monitoreo">Monitoreo</a><a href="#arquitectura">Arquitectura</a><a href="#aplicaciones">Aplicaciones</a><a href="#graficas-pdf">Gráficas PDF</a><a href="#componentes">Componentes</a><a href="#conexion">ThingSpeak</a></div><span class="tag">ESP32 · Control local</span></nav></header>
 <main>
 <section id="inicio" class="wrap hero"><div><div class="eyebrow">Proyecto de Ingeniería Mecatrónica</div><h1>Cultivo inteligente.<br><em>Control autónomo.</em></h1><p class="lead">Monitoreo de iluminación, humedad de suelo, temperatura y nivel de agua con ESP32. La bomba, el ventilador y la iluminación LED UV se controlan <b>directamente en el dispositivo</b>, sin depender de Internet.</p><div class="heroactions"><a class="btn primary" href="#arquitectura">Explorar arquitectura</a><a class="btn" href="#monitoreo">Ver monitoreo</a></div></div><div class="herovisual"><div class="orbs"></div><svg class="greenhouse" viewBox="0 0 470 350" role="img" aria-label="Ilustración de un invernadero con plantas, tanque y ventilación"><defs><linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a6eadd" stop-opacity=".32"/><stop offset="1" stop-color="#a6eadd" stop-opacity=".03"/></linearGradient></defs><path d="M45 127 235 31 426 127V322H45Z" fill="url(#glass)" stroke="#99dcba" stroke-width="6"/><path d="M45 127H426M235 31V322M95 102V322M375 102V322" stroke="#79cbb3" stroke-width="3" opacity=".7"/><path d="M45 322H426" stroke="#e0f4ce" stroke-width="7"/><g fill="#3ca66c" stroke="#96f0a7" stroke-width="2"><path d="M100 287Q60 259 85 224Q117 229 110 272Q150 227 171 238Q157 277 113 281V310H98Z"/><path d="M208 287Q168 259 193 224Q225 229 218 272Q258 227 279 238Q265 277 221 281V310H206Z"/><path d="M313 287Q273 259 298 224Q330 229 323 272Q363 227 384 238Q370 277 326 281V310H311Z"/></g><path d="M66 306H398" stroke="#b0e692" stroke-width="10"/><rect x="181" y="127" width="105" height="15" rx="5" fill="#f2adfa"/><path d="M192 145 205 205M222 145 235 205M252 145 265 205" stroke="#e8adf5" stroke-dasharray="4 5" stroke-width="3"/><circle cx="371" cy="175" r="26" fill="#13333a" stroke="#a4d5cf" stroke-width="5"/><path d="M370 174Q351 147 367 151Q391 153 373 174Q397 170 389 186Q378 198 370 175Q360 199 347 187Q338 171 370 174" fill="#96d5d4"/><rect x="61" y="186" width="49" height="67" rx="8" fill="#438ec1" stroke="#9ce9ff" stroke-width="4"/><path d="M61 210H110" stroke="#b9efff" stroke-width="3"/></svg><div class="float f1">Intensidad luminosa<strong id="heroLux">— lx</strong></div><div class="float f2">Modo del sistema<strong style="color:#a9f3c3;font-size:16px">AUTÓNOMO LOCAL</strong></div></div></section>
 <section id="monitoreo" class="section wrap"><div class="head"><div><div class="eyebrow">01 / Telemetría</div><h2>Panel de monitoreo</h2><p>Mediciones consultadas desde ThingSpeak o valores simulados para visualizar el diseño.</p></div><div class="mode"><span class="dot"></span><span id="modeLabel" aria-live="polite">MODO DEMOSTRACIÓN</span></div></div><div class="kpis"><article class="card kpi"><div class="kpi-top"><span>Iluminación · BH1750</span><span class="ico">☀</span></div><div class="value"><span id="lux">—</span> <small>lx</small></div><div class="sub">Intensidad lumínica</div><div class="meter"><div class="fill" id="barLux"></div></div></article><article class="card kpi"><div class="kpi-top"><span>Humedad del suelo · YL-69</span><span class="ico">◈</span></div><div class="value"><span id="soil">—</span> <small>%</small></div><div class="sub">Porcentaje estimado, requiere calibración</div><div class="meter"><div class="fill" id="barSoil"></div></div></article><article class="card kpi"><div class="kpi-top"><span>Temperatura · DHT11</span><span class="ico">◉</span></div><div class="value"><span id="temp">—</span> <small>°C</small></div><div class="sub">Temperatura ambiental</div><div class="meter"><div class="fill" id="barTemp"></div></div></article><article class="card kpi"><div class="kpi-top"><span>Humedad ambiental · DHT11</span><span class="ico">≋</span></div><div class="value"><span id="air">—</span> <small>%</small></div><div class="sub">Humedad relativa</div><div class="meter"><div class="fill" id="barAir"></div></div></article></div><div style="margin-top:14px" class="card"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div><b>Nivel de agua del tanque</b><div class="sub">Detectado mediante interruptor flotador</div></div><div id="water" class="pill demo">Sin datos</div></div><p class="tstamp" style="margin-bottom:0">Última lectura: <span id="lastRead">Sin conexión</span></p></div></section>
@@ -30,8 +30,8 @@
     <div class="iot-inspector" aria-live="polite"><strong id="iot-detail-title">Explora las conexiones</strong><p id="iot-detail">Selecciona un componente para ver su función. Lee el flujo de telemetría de abajo hacia arriba.</p></div>
     <article class="iot-layer iot-app iot-remote"><header class="iot-header"><span class="iot-index">04</span><h3>Aplicación</h3><span class="iot-type">Supervisión</span></header><div class="iot-grid"><button type="button" class="iot-node" aria-pressed="false" data-detail="Visualiza las mediciones almacenadas directamente en el canal de ThingSpeak."><strong>Dashboard ThingSpeak</strong><span>Gráficas e historial</span></button>
 <button type="button" class="iot-node" aria-pressed="false" data-detail="La página estática solicita la última entrada de un canal público por HTTPS y lee su respuesta JSON."><strong>Página web</strong><span>Consulta de solo lectura</span></button>
-<button type="button" class="iot-node" aria-pressed="false" data-detail="La aplicación móvil puede consultar las mismas mediciones públicas y su historial."><strong>MIT App Inventor</strong><span>Monitoreo móvil</span></button>
-<button type="button" class="iot-node" aria-pressed="false" data-detail="Los avisos dependen de que Google Apps Script esté configurado y pueda enviar correo."><strong>Correo electrónico</strong><span>Recepción de avisos</span></button></div></article>
+<button type="button" class="iot-node" aria-pressed="false" data-detail="La aplicación móvil puede consultar las mismas mediciones públicas y su historial."><strong>Aplicación móvil</strong><span>Monitoreo en MIT App Inventor</span></button>
+<button type="button" class="iot-node" aria-pressed="false" data-detail="Los avisos dependen de que Google Apps Script esté configurado y pueda enviar correo."><strong>Correo electrónico</strong><span>Recepción de avisos</span></button></div><p class="iot-analysis"><a href="#aplicaciones">Ver la aplicación móvil y su flujo de consulta</a></p></article>
     <div class="iot-branches"><div class="iot-link "><svg viewBox="0 0 32 44" aria-hidden="true" focusable="false"><path d="M16 40V5m-7 7 7-7 7 7" /></svg><span>Datos del canal → dashboard, web y app</span></div><div class="iot-link iot-alert"><svg viewBox="0 0 32 44" aria-hidden="true" focusable="false"><path d="M16 40V5m-7 7 7-7 7 7" /></svg><span>Google Apps Script → correo</span></div></div>
 <article class="iot-layer iot-cloud iot-remote"><header class="iot-header"><span class="iot-index">03</span><h3>Procesamiento</h3><span class="iot-type">Servicios en la nube</span></header><div class="iot-grid"><button type="button" class="iot-node" aria-pressed="false" data-detail="Almacena mediciones y, opcionalmente, estados reportados por el ESP32."><strong>ThingSpeak</strong><span>Canal de telemetría</span></button>
 <button type="button" class="iot-node" aria-pressed="false" data-detail="React es la herramienta de reglas de ThingSpeak. Puede iniciar MATLAB Analysis cuando se cumpla una condición."><strong>React</strong><span>Disparador por condición</span></button>
@@ -68,6 +68,35 @@
   </div>
 </section>
 
+<section id="aplicaciones" class="section wrap" aria-labelledby="appsTitle">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Capa de aplicación</div>
+      <h2 id="appsTitle">Aplicaciones del invernadero</h2>
+      <p>Consulta las últimas mediciones desde la web, ThingSpeak o la app móvil.</p>
+    </div>
+  </div>
+  <div class="split">
+    <article class="card mobile-app">
+      <h3>Aplicación móvil en MIT App Inventor</h3>
+      <p>El prototipo reúne la humedad del suelo, la temperatura, la iluminación y el estado del tanque. También muestra un historial de iluminación en lux.</p>
+      <h4>Flujo de consulta</h4>
+      <ol>
+        <li>El ESP32 registra las mediciones en ThingSpeak cuando tiene conexión.</li>
+        <li>El componente Web de App Inventor puede solicitar las lecturas del canal público por HTTPS y recibirlas en formato JSON.</li>
+        <li>La app presenta la última lectura y el historial de iluminación del campo 7, según el mapeo del canal.</li>
+      </ol>
+      <p>En la arquitectura actual, la app es de solo lectura. El ESP32 conserva el control de la bomba, el ventilador y el LED UV durante un corte de Internet.</p>
+      <a class="btn" href="#conexion">Configurar consulta web</a>
+    </article>
+    <figure class="card pdf-figure mobile-preview">
+      <a href="imagenes/captura_aplicacion_movil.png" target="_blank" rel="noopener">
+        <img src="imagenes/captura_aplicacion_movil.png" alt="Prototipo móvil con cuatro lecturas y una gráfica de iluminación, junto al dashboard de ThingSpeak" loading="lazy">
+      </a>
+      <figcaption><strong>Prototipo móvil de la presentación</strong><span>La captura histórica conserva los botones de iluminación de esa versión. El diseño actual reserva esa función al ESP32.</span></figcaption>
+    </figure>
+  </div>
+</section>
 <section id="graficas-pdf" class="section wrap" aria-labelledby="galleryPdfTitle">
   <div class="head"><div><div class="eyebrow">03 / Evidencia visual · Presentación original</div><h2 id="galleryPdfTitle">Gráficas reales de ThingSpeak</h2><p>Capturas extraídas directamente del PDF del proyecto. Son imágenes históricas de la presentación, no mediciones en vivo.</p></div></div>
   <div class="pdf-gallery">
