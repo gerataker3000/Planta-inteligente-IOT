@@ -100,3 +100,7 @@
 }
 .thingspeak-card a { color: var(--blue); text-decoration: underline; justify-self: start; }
 .sr-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+.thingspeak-static-head { margin-top: 28px; }
+.thingspeak-static-head h3 { margin: 0; }
+.thingspeak-static img { height: auto; aspect-ratio: auto; }
